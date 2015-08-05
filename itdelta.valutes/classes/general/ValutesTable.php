@@ -47,9 +47,19 @@ class ValutesTable extends Entity\DataManager {
 		return $res;
 	}
 	
-	public static function getList() {
+	public static function getList($arFilter) {
 		global $DB;
-		$sql = 'SELECT * FROM `' . ValutesTable::getTableName() . '`';
+		
+		if($arFilter) {
+			$where = "WHERE ";
+			foreach($arFilter as $key=>$arItem) {
+				$where .= "`$key`=\"$arItem\" ";
+				if($arItem != end($arFilter)) {
+					$where .= 'AND ';
+				}
+			}
+		}
+		$sql = 'SELECT * FROM `' . ValutesTable::getTableName() . '` ' . $where;
 		$res = $DB->Query($sql);
 		return $res;
 	}
@@ -71,6 +81,27 @@ class ValutesTable extends Entity\DataManager {
 	}
 	
 	public static function add($arFields) {
-		
+		global $DB;
+		$arFields['ACTIVE'] = $arFields['ACTIVE'] ? $arFields['ACTIVE'] : 'N';
+		$sql = 'INSERT INTO `' . ValutesTable::getTableName() . '` ';
+		$map = ValutesTable::getMap();
+		$sql .= '(';
+		foreach($map as $key=>$element) {
+			$sql .= '`' . $key . '`';
+			if($element != end($map)) {
+				$sql .= ', ';
+			}
+		}
+		$sql .= ') ';
+		$sql .= 'VALUES(';
+		foreach($map as $key=>$element) {
+			$sql .= "'" . $arFields[$key] . "'";
+			if($element != end($map)) {
+				$sql .= ', ';
+			}
+		}
+		$sql .= ') ';
+		$res = $DB->Query($sql);
+		$res->Fetch();
 	}
 }

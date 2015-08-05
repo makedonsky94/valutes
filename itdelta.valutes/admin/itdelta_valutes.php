@@ -29,7 +29,7 @@ if ($lAdmin->EditAction() && $POST_RIGHT == "W")
 	{
 		if(!$lAdmin->IsUpdated($ID)) continue;
 		$DB->StartTransaction();
-			$arData = array('DATE_MODIFY' => Bitrix\Main\Type\Date::createFromTimestamp(time()));
+			//$arData = array('DATE_MODIFY' => Bitrix\Main\Type\Date::createFromTimestamp(time()));
 			foreach($arFields as $key => $value)
 			{
 				if (!empty($value)) $arData[$key] = $value;
@@ -49,7 +49,7 @@ if (($arID = $lAdmin->GroupAction()) && $POST_RIGHT == "W")
 	if($_REQUEST['action_target'] == 'selected')
 	{
 		$arId = array();
-		$ids = Valutes::getList(array('select' => array('ID')))->fetchAll();
+		$ids = Valutes::getList()->fetchAll();
 		foreach ($ids as $id) $arID[] = $id['ID'];
 	}
 	
@@ -70,7 +70,7 @@ if (($arID = $lAdmin->GroupAction()) && $POST_RIGHT == "W")
 		
 			case 'activate':
 			case 'deactivate':
-				$arFields['DATE_MODIFY'] = Bitrix\Main\Type\Date::createFromTimestamp(time());
+				//$arFields['DATE_MODIFY'] = Bitrix\Main\Type\Date::createFromTimestamp(time());
 				$arFields['ACTIVE'] = $_REQUEST['action'] == 'activate' ? 'Y' : 'N';
 				$res = Valutes::update($ID, $arFields);
 				if(!$res->isSuccess())
@@ -108,10 +108,7 @@ if (!empty($find_active))
 $arOrder = !empty($by) && !empty($order) ? array($by => $order) : array('ID' => 'ASC');
 
 $req = Application::getInstance()->getContext()->getRequest();
-$items = Valutes::getList(array(
-			'order' => $arOrder,
-			'filter' => $arFilter
-		));
+$items = Valutes::getList();
 
 $rsData = new CAdminResult($items, $sTableID);
 $rsData->NavStart();
