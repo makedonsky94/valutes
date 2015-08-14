@@ -104,4 +104,11 @@ class ValutesTable extends Entity\DataManager {
 		$res = $DB->Query($sql);
 		$res->Fetch();
 	}
+	
+	public static function delete($id) {
+		global $DB;
+		$sql = 'DELETE FROM '. ValutesTable::getTableName() .' WHERE `ID`=' . $id;
+		$res = $DB->Query($sql);
+		$res->Fetch();
+	}
 }

@@ -59,12 +59,12 @@ if (($arID = $lAdmin->GroupAction()) && $POST_RIGHT == "W")
 		{
 			case 'delete':
 				$DB->StartTransaction();
-				$res = Valutes::Delete($ID);
-				if(!$res->isSuccess())
+				$res = Valutes::delete($ID);
+				/*if(!$res->isSuccess())
 				{
 					$DB->Rollback();
 					$lAdmin->AddGroupError(implode('<br>', $res->getErrorMessages()), $ID);
-				}
+				}*/
 				$DB->Commit();
 			break;
 		
@@ -73,11 +73,11 @@ if (($arID = $lAdmin->GroupAction()) && $POST_RIGHT == "W")
 				//$arFields['DATE_MODIFY'] = Bitrix\Main\Type\Date::createFromTimestamp(time());
 				$arFields['ACTIVE'] = $_REQUEST['action'] == 'activate' ? 'Y' : 'N';
 				$res = Valutes::update($ID, $arFields);
-				if(!$res->isSuccess())
+				/*if(!$res->isSuccess())
 				{
 					$DB->Rollback();
 					$lAdmin->AddGroupError(implode('<br>', $res->getErrorMessages()), $ID);
-				}
+				}*/
 				$DB->Commit();
 			break;
 		}	
@@ -115,9 +115,7 @@ $rsData->NavStart();
 $lAdmin->NavText($rsData->GetNavPrint('Страницы'));
 
 
-// ******************************************************************** //
-//                ���������� ������ � ������                            //
-// ******************************************************************** //
+
 $lAdmin->AddHeaders(array(
 	array(
 		'id' => 'ID',
@@ -197,16 +195,16 @@ $lAdmin->AddGroupActionTable(Array(
 	"deactivate"=> 'Деактивировать выбранные элементы',
 ));
 
-/*$aContext = array(
+$aContext = array(
 	array(
 		"TEXT" => 'Добавить элемент',
-		"LINK" => "itdelta_valutes_detail.php?id=0",
-		"TITLE" => Добавить элемент',
+		"LINK" => "itdelta_valutes_detail.php?action=add",
+		"TITLE" => 'Добавить элемент',
 		"ICON" => "btn_new",
 	),
-);*/
+);
 
-$lAdmin->AddAdminContextMenu();
+$lAdmin->AddAdminContextMenu($aContext);
 
 $lAdmin->CheckListMode();
 

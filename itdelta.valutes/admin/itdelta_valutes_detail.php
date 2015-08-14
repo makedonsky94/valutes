@@ -27,6 +27,10 @@ if($REQUEST_METHOD == "POST") {
 	$save = $request->getPost('save');
 	$name = $request->getPost('name');
 }
+$actionAdd = false;
+if($request->getQuery('action') == 'add') {
+	$actionAdd = true;
+}
 ?>
 <?php
 $aTabs = array(
@@ -52,9 +56,12 @@ if(
 		'NAME' => $NAME,   
 		'VALUE'  => $VALUE,
 	);
-
+	//добавляем элемент
+	if($actionAdd) {
+		Valutes::add($arFields);
+	}
 	// сохранение данных
-	if($ID >= 0)
+	else if($ID >= 0)
 	{
 		Valutes::update($ID, $arFields);
 	}
@@ -66,6 +73,7 @@ if(
 }
 
 
+
 ?>
 <?php
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_after.php"); // второй общий пролог
@@ -74,7 +82,6 @@ require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_aft
 $result = \ITDelta\Valutes\ValutesTable::getById($ID);
 while($res = $result->Fetch()) {
 	$arResult = $res;
-	
 }
 ?>
 
@@ -92,10 +99,22 @@ while($res = $result->Fetch()) {
 								<input class="adm-designed-checkbox-label" type="checkbox" name="ACTIVE" <?=$arResult['ACTIVE'] == "Y" ? "checked" : ""?>>
 							</td>
 						</tr>
+						<? if($actionAdd): ?>
+						<tr>
+							<td class="adm-detail-content-cell-l">
+								<p>Название:</p>
+							</td>
+							<td  class="adm-detail-content-cell-r">
+								<input type="text" name="NAME" value="<?=$arResult['NAME']?>" >
+							</td>
+						</tr>
+						<? endif; ?>
 						<tr>
 							<td class="adm-detail-content-cell-l">
 								<p>Курс:</p>
+								<? if(!$actionAdd): ?>
 								<input type="hidden" name="NAME" value="<?=$arResult['NAME']?>" />
+								<? endif; ?>
 							</td>
 							<td  class="adm-detail-content-cell-r">
 								<input name="VALUE" type="text" value="<?=$arResult['VALUE']?>" /> <span>руб.</span>
